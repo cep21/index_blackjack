@@ -1,16 +1,36 @@
 <html>
-  <head>
+<head>
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="load_decks.js"></script>
     <title>Blackjack index plays</title>
-  </head>
-  <body bgcolor=white>
-    <table>
-      <tr>
+</head>
+<body bgcolor=white>
+<table border="1">
+    <tr>
+        <td>Strategy Name</td>
+        <td id="strategy_name">0</td>
+    </tr>
+    <tr>
         <td>Number of decks</td>
         <td id="number_of_decks">0</td>
-      </tr>
-    </table>
-    <p id="deck_name">Unknown deck</p>
-  </body>
+    </tr>
+    <tr>
+        <td>Double after Split</td>
+        <td id="double_after_split">0</td>
+    </tr>
+    <tr>
+        <td>Hit soft 17</td>
+        <td id="hit_soft_17">0</td>
+    </tr>
+    <tr>
+        <td>Surrender</td>
+        <td id="surrender">0</td>
+    </tr>
+</table>
+<p id="hard_table_header">Hard hand</p>
+<table id="hard_table" border="1">
+</table>
+<table id="soft_table" border="1">
+</table>
+</body>
 </html>

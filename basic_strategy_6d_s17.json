@@ -2,9 +2,9 @@
   "strategy": "basic",
   "decks": 6,
   "DaS": true,
+  "surrender": "no",
+  "hit_soft_17": false,
   "hard": [
-  ["H", "H", "H" , "H" , "H" , "H" , "H" , "H" , "H" , "H"],
-  ["H", "H", "H" , "H" , "H" , "H" , "H" , "H" , "H" , "H"],
   ["H", "H", "H" , "H" , "H" , "H" , "H" , "H" , "H" , "H"],
   ["H", "H", "H" , "H" , "H" , "H" , "H" , "H" , "H" , "H"],
   ["H", "H", "H" , "H" , "H" , "H" , "H" , "H" , "H" , "H"],
