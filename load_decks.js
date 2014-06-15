@@ -59,6 +59,41 @@ $.getJSON("./basic_strategy_6d_s17.json",function (data) {
         }
     }
 
+    {
+        var soft_table = $("#soft_double_table")
+        soft_table.empty();
+        head = $('<tr><td></td></tr>');
+        for (i = 2; i < 12; i++) {
+            head.append("<td>" + card_tables[i] + "</td>");
+        }
+        soft_table.append(head);
+
+        for (i = 2; i < 11; i++) {
+            head = $("<tr><td> A/" + card_tables[i] + " (" + (11 + i) + ")</td></tr>");
+            for (j = 0; j < 10; j++) {
+                head.append("<td>" + data.soft_double[i - 2][j] + "</td>");
+            }
+            soft_table.append(head);
+        }
+    }
+
+    {
+        var soft_table = $("#split_table")
+        soft_table.empty();
+        head = $('<tr><td></td></tr>');
+        for (i = 2; i < 12; i++) {
+            head.append("<td>" + card_tables[i] + "</td>");
+        }
+        soft_table.append(head);
+
+        for (i = 2; i < 12; i++) {
+            head = $("<tr><td>" + card_tables[i] + "," + card_tables[i] + "</td></tr>");
+            for (j = 0; j < 10; j++) {
+                head.append("<td>" + data.split[i - 2][j] + "</td>");
+            }
+            soft_table.append(head);
+        }
+    }
 
 }).fail(function () {
         console.log("not valid json???");
