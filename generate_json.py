@@ -1,11 +1,63 @@
 from HTMLParser import HTMLParser
+import collections
 import urllib2
+import json
+import sys
+
+card_index = {'A': 9, 'X': 8}
+for i in range(2, 11):
+    card_index[str(i)] = i-2
+
+class Strategy:
+    def __init__(self, to_copy):
+        self.decks = to_copy.decks
+        self.DaS = to_copy.DaS
+        self.surrender_allowed = to_copy.surrender_allowed
+        self.hit_soft_17 = to_copy.hit_soft_17
+        self.hard = to_copy.hard
+        self.soft = to_copy.soft
+        self.split = to_copy.split
+        self.hard_double = to_copy.hard_double
+        self.soft_double = to_copy.soft_double
+        self.insurance = to_copy.insurance
+
+    def hardHitCount(self, dealer, you, count):
+        assert dealer in card_index, "Unable to find " + dealer + " in " + str(card_index)
+        dealer_index = card_index[dealer]
+        assert you >= 12 and you <= 21
+        self.hard[you-12][dealer_index] = str(count)
+
+    def softHitCount(self, dealer, you, count):
+        assert dealer in card_index
+        dealer_index = card_index[dealer]
+        assert you >= 13 and you <= 21
+        self.soft[you-13][dealer_index] = str(count)
+
+    def hardDouble(self, dealer, you, count):
+        assert dealer in card_index
+        dealer_index = card_index[dealer]
+        assert you >= 5 and you <= 11
+        self.hard_double[you-5][dealer_index] = str(count)
+
+    def softDouble(self, dealer, you, count):
+        assert dealer in card_index
+        dealer_index = card_index[dealer]
+        assert you >= 13 and you <= 21
+        self.soft_double[you-13][dealer_index] = str(count)
+
+    def splitIndex(self, dealer, you, count):
+        assert dealer in card_index
+        dealer_index = card_index[dealer]
+        you_index = card_index[you]
+        assert you_index >= 0 and you_index <= 11, "You are " + str(you_index)
+        self.split[you_index-2][dealer_index] = str(count)
 
 
 class MyHTMLParser(HTMLParser):
-    def __init__(self):
+    def __init__(self, strat):
         HTMLParser.__init__(self)
         self.current_text_tag = ""
+        self.strat = strat
 
     def handle_starttag(self, tag, attrs):
         # print "Encountered a start tag:", tag
@@ -54,6 +106,8 @@ class MyHTMLParser(HTMLParser):
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
                                                                                       "count " + \
                   condition + " " + count
+            if action == "Hit":
+                self.strat.hardHitCount(dealer_hand, int(hard_hand), condition + " " + count)
             return
         if text.startswith("Soft Hit/Stand Table - "):
             text = text[len("Soft Hit/Stand Table - "):]
@@ -71,6 +125,9 @@ class MyHTMLParser(HTMLParser):
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
                                                                                       "count " + \
                   condition + " " + count
+            if action == "Hit":
+                hard_value = int(hard_hand[1]) + 11
+                self.strat.softHitCount(dealer_hand, int(hard_value), condition + " " + count)
             return
         if text.startswith("Hard Double Down - "):
             text = text[len("Hard Double Down - "):]
@@ -92,6 +149,8 @@ class MyHTMLParser(HTMLParser):
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
                                                                                       "count " + \
                   condition + " " + count
+            if action == "DD" and count != "inf":
+                self.strat.hardDouble(dealer_hand, int(hard_hand), condition + " " + count)
             return
         if text.startswith("Soft Double Down - "):
             text = text[len("Soft Double Down - "):]
@@ -113,6 +172,9 @@ class MyHTMLParser(HTMLParser):
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
                                                                                       "count " + \
                   condition + " " + count
+            if action == "DD" and count != "inf":
+                hard_value = int(hard_hand[1]) + 11
+                self.strat.softDouble(dealer_hand, int(hard_value), condition + " " + count)
             return
         if text.startswith("Splitting Pairs - "):
             text = text[len("Splitting Pairs - "):]
@@ -131,6 +193,9 @@ class MyHTMLParser(HTMLParser):
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
                                                                                       "count " + \
                   condition + " " + count
+            if count != "inf":
+                hard_value = hard_hand[0]
+                self.strat.splitIndex(dealer_hand, hard_value, condition + " " + count)
             return
         if text.startswith("Insurance -  vs. "):
             s = text.index("Insurance -  vs. ")
@@ -143,13 +208,30 @@ class MyHTMLParser(HTMLParser):
         raise Exception("Unknown text " + text)
 
 
-def load_file(f):
+def load_file(f, strat):
     contents = urllib2.urlopen(f)
     html = contents.read()
-    MyHTMLParser().feed(html)
+    MyHTMLParser(strat).feed(html)
 
 
 # print "Hello"
 
-load_file("http://cep21.net/2d_ao2_d10_nodas_h17_ra_75pen.htm")
-# load_file("http://cep21.net/1d_ao2_d10_s17_6rd_ra.htm")
+togen = {
+    "6d_hilow_s17_75pen_ra" : "basic_strategy_6d_s17"
+}
+
+for name, basic in togen.items():
+    # load_file("http://cep21.net/2d_ao2_d10_nodas_h17_ra_75pen.htm")
+
+    with open("%s.json" % basic) as f:
+        basic = json.load(f)
+        basic_strat = collections.namedtuple("Strategy", basic.keys())(*basic.values())
+        strat = Strategy(basic_strat)
+
+    strat.strategy = name
+
+    load_file("http://cep21.net/%s.htm" % name, strat)
+
+    contents = json.dumps(strat.__dict__, sort_keys=True)
+    with open("%s.json" % name, 'w') as f:
+        json.dump(strat.__dict__, f)

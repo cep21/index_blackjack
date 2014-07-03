@@ -1,4 +1,6 @@
-$.getJSON("./basic_strategy_6d_s17.json",function (data) {
+//1d_ao2_d10_s17_6rd_ra.json
+//$.getJSON("./basic_strategy_6d_s17.json",function (data) {
+$.getJSON("./6d_hilow_s17_75pen_ra.json",function (data) {
     console.log(data);
     $("#strategy_name").text(data.strategy);
     $("#number_of_decks").text(data.decks);
@@ -9,9 +11,10 @@ $.getJSON("./basic_strategy_6d_s17.json",function (data) {
     {
         var hard_table = $("#hard_table")
         hard_table.empty();
-        var head = $('<tr><td></td></tr>');
+        hard_table.addClass("basic_table")
+        var head = $('<tr class="head_row"><td class="head_data"></td></tr>');
         for (i = 2; i < 12; i++) {
-            head.append("<td>" + card_tables[i] + "</td>");
+            head.append('<td class="head_data">' + card_tables[i] + "</td>");
         }
         hard_table.append(head);
 
@@ -27,9 +30,10 @@ $.getJSON("./basic_strategy_6d_s17.json",function (data) {
     {
         var soft_table = $("#soft_table")
         soft_table.empty();
-        head = $('<tr><td></td></tr>');
+        soft_table.addClass("basic_table")
+        head = $('<tr><td class="head_data"></td></tr>');
         for (i = 2; i < 12; i++) {
-            head.append("<td>" + card_tables[i] + "</td>");
+            head.append('<td class="head_data">' + card_tables[i] + "</td>");
         }
         soft_table.append(head);
 
@@ -44,9 +48,10 @@ $.getJSON("./basic_strategy_6d_s17.json",function (data) {
     {
         var hard_double = $("#hard_double_table")
         hard_double.empty();
-        head = $('<tr><td></td></tr>');
+        hard_double.addClass("basic_table")
+        head = $('<tr><td class="head_data"></td></tr>');
         for (i = 2; i < 12; i++) {
-            head.append("<td>" + card_tables[i] + "</td>");
+            head.append('<td class="head_data">' + card_tables[i] + "</td>");
         }
         hard_double.append(head);
 
@@ -62,9 +67,10 @@ $.getJSON("./basic_strategy_6d_s17.json",function (data) {
     {
         var soft_table = $("#soft_double_table")
         soft_table.empty();
-        head = $('<tr><td></td></tr>');
+        soft_table.addClass("basic_table")
+        head = $('<tr><td class="head_data"></td></tr>');
         for (i = 2; i < 12; i++) {
-            head.append("<td>" + card_tables[i] + "</td>");
+            head.append('<td class="head_data">' + card_tables[i] + "</td>");
         }
         soft_table.append(head);
 
@@ -80,9 +86,10 @@ $.getJSON("./basic_strategy_6d_s17.json",function (data) {
     {
         var soft_table = $("#split_table")
         soft_table.empty();
-        head = $('<tr><td></td></tr>');
+        soft_table.addClass("basic_table")
+        head = $('<tr><td class="head_data"></td></tr>');
         for (i = 2; i < 12; i++) {
-            head.append("<td>" + card_tables[i] + "</td>");
+            head.append('<td class="head_data">' + card_tables[i] + "</td>");
         }
         soft_table.append(head);
 
@@ -94,7 +101,6 @@ $.getJSON("./basic_strategy_6d_s17.json",function (data) {
             soft_table.append(head);
         }
     }
-
 }).fail(function () {
         console.log("not valid json???");
     });
