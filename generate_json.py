@@ -50,7 +50,7 @@ class Strategy:
         dealer_index = card_index[dealer]
         you_index = card_index[you]
         assert you_index >= 0 and you_index <= 11, "You are " + str(you_index)
-        self.split[you_index-2][dealer_index] = str(count)
+        self.split[you_index][dealer_index] = str(count)
 
     def insureIndex(self, count):
         self.insurance = count
@@ -220,7 +220,8 @@ def load_file(f, strat):
 
 
 togen = {
-    "6d_hilow_s17_75pen_ra" : "basic_strategy_6d_s17"
+    "6d_hilow_s17_75pen_ra" : "basic_strategy_6d_s17",
+    "1d_ao2_d10_s17_6rd_ra" : "basic_strategy_1d_s17",
 }
 
 for name, basic in togen.items():
