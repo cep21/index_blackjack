@@ -3,7 +3,7 @@ $.getJSON("./basic_strategy_6d_s17.json",function (data) {
     $("#strategy_name").text(data.strategy);
     $("#number_of_decks").text(data.decks);
     $("#double_after_split").text(data.DaS ? "Yes" : "No");
-    $("#surrender").text(data.surrender);
+    $("#surrender_allowed").text(data.surrender_allowed);
     $("#hit_soft_17").text(data.hit_soft_17 ? "Yes" : "No");
     var card_tables = [null, "A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "A"];
     {

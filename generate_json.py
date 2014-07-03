@@ -31,7 +31,8 @@ class MyHTMLParser(HTMLParser):
         self.current_text_tag += str(self.unescape("&" + name + ";").encode('ascii', 'ignore'))
 
     def processText(self, text):
-        if text in ["", "Index", "Stand", "Hit", "Diff", "Double Down", "No Double Down", "Split", "No Split"]:
+        if text in ["", "Index", "Stand", "Hit", "Diff", "Double Down", "No Double Down", "Split",
+                    "No Split", "Insure", "Don't Insure"]:
             return
         try:
             float(text)
@@ -39,24 +40,26 @@ class MyHTMLParser(HTMLParser):
         except ValueError:
             pass
         if ", 2014, " in text:
-            print "A date.  That's ok"
+            # print "A date.  That's ok"
             return
         if text.startswith("Hard Hit/Stand Table - "):
             text = text[len("Hard Hit/Stand Table - "):]
             parts = text.split(" ")
             hard_hand = parts[0]
-            assert(parts[1] == "vs.")
+            assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
             action = parts[3]
             condition = parts[4]
             count = parts[5]
-            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with count " + condition + " " + count
+            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
+                                                                                      "count " + \
+                  condition + " " + count
             return
         if text.startswith("Soft Hit/Stand Table - "):
             text = text[len("Soft Hit/Stand Table - "):]
             parts = text.split(" ")
             hard_hand = parts[0]
-            assert(parts[1] == "vs.")
+            assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
             action = parts[3]
             if (len(parts) == 4):
@@ -65,13 +68,15 @@ class MyHTMLParser(HTMLParser):
             else:
                 condition = parts[4]
                 count = parts[5]
-            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with count " + condition + " " + count
+            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
+                                                                                      "count " + \
+                  condition + " " + count
             return
         if text.startswith("Hard Double Down - "):
             text = text[len("Hard Double Down - "):]
             parts = text.split(" ")
             hard_hand = parts[0]
-            assert(parts[1] == "vs.")
+            assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
             action = parts[3]
             if (len(parts) == 4):
@@ -80,47 +85,71 @@ class MyHTMLParser(HTMLParser):
             else:
                 condition = parts[4]
                 count = parts[5]
-            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with count " + condition + " " + count
+            if action == "No":
+                action = "DD"
+                count = "inf"
+                condition = ">="
+            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
+                                                                                      "count " + \
+                  condition + " " + count
             return
         if text.startswith("Soft Double Down - "):
             text = text[len("Soft Double Down - "):]
             parts = text.split(" ")
             hard_hand = parts[0]
-            assert(parts[1] == "vs.")
+            assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
             action = parts[3]
             if (len(parts) == 4):
-                condition = ">"
-                count = "-inf"
+                condition = "<"
+                count = "inf"
             else:
                 condition = parts[4]
                 count = parts[5]
-            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with count " + condition + " " + count
+            if action == "No":
+                action = "DD"
+                count = "inf"
+                condition = ">="
+            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
+                                                                                      "count " + \
+                  condition + " " + count
             return
         if text.startswith("Splitting Pairs - "):
             text = text[len("Splitting Pairs - "):]
             parts = text.split(" ")
             hard_hand = parts[0]
-            assert(parts[1] == "vs.")
+            assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
             action = parts[3]
             if (len(parts) == 5):
                 condition = ">"
-                count = "-inf"
+                count = "inf"
+                action = "split"
             else:
                 condition = parts[4]
                 count = parts[5]
-            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with count " + condition + " " + count
+            print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
+                                                                                      "count " + \
+                  condition + " " + count
             return
+        if text.startswith("Insurance -  vs. "):
+            s = text.index("Insurance -  vs. ")
+            text = text[s + len("Insurance -  vs. "):]
+            text = text[text.index(" >= ") + len(" >= "):]
+            count_to_insure = int(text)
+            print "Insure >= " + str(count_to_insure)
+            return
+
         raise Exception("Unknown text " + text)
 
 
-def load_file(file):
-    contents = urllib2.urlopen(file)
+def load_file(f):
+    contents = urllib2.urlopen(f)
     html = contents.read()
     MyHTMLParser().feed(html)
 
 
-print "Hello"
+# print "Hello"
 
 load_file("http://cep21.net/2d_ao2_d10_nodas_h17_ra_75pen.htm")
+# load_file("http://cep21.net/1d_ao2_d10_s17_6rd_ra.htm")
