@@ -5,3 +5,31 @@
 .head_data {
     width: 9%
 }
+
+.hit_data {
+    background-color: red;
+}
+
+.stand_data {
+    background-color: yellow;
+}
+
+.index_data {
+    background-color: orange;
+}
+
+.double_data {
+    background-color: blue;
+}
+
+.no_double_data {
+    background-color: gray;
+}
+
+.split_data {
+    background-color: green;
+}
+
+.no_split_data {
+    background-color: teal;
+}

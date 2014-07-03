@@ -52,6 +52,10 @@ class Strategy:
         assert you_index >= 0 and you_index <= 11, "You are " + str(you_index)
         self.split[you_index-2][dealer_index] = str(count)
 
+    def insureIndex(self, count):
+        self.insurance = count
+
+
 
 class MyHTMLParser(HTMLParser):
     def __init__(self, strat):
@@ -203,6 +207,7 @@ class MyHTMLParser(HTMLParser):
             text = text[text.index(" >= ") + len(" >= "):]
             count_to_insure = int(text)
             print "Insure >= " + str(count_to_insure)
+            self.strat.insureIndex(count_to_insure)
             return
 
         raise Exception("Unknown text " + text)
@@ -214,15 +219,11 @@ def load_file(f, strat):
     MyHTMLParser(strat).feed(html)
 
 
-# print "Hello"
-
 togen = {
     "6d_hilow_s17_75pen_ra" : "basic_strategy_6d_s17"
 }
 
 for name, basic in togen.items():
-    # load_file("http://cep21.net/2d_ao2_d10_nodas_h17_ra_75pen.htm")
-
     with open("%s.json" % basic) as f:
         basic = json.load(f)
         basic_strat = collections.namedtuple("Strategy", basic.keys())(*basic.values())
