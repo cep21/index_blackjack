@@ -104,7 +104,7 @@ class MyHTMLParser(HTMLParser):
             hard_hand = parts[0]
             assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
-            action = parts[3]
+            action = parts[3].strip()
             condition = parts[4]
             count = parts[5]
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
@@ -119,13 +119,13 @@ class MyHTMLParser(HTMLParser):
             hard_hand = parts[0]
             assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
-            action = parts[3]
+            action = parts[3].strip()
             if (len(parts) == 4):
                 condition = ">"
                 count = "-inf"
             else:
-                condition = parts[4]
-                count = parts[5]
+                condition = parts[4].strip()
+                count = parts[5].strip()
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
                                                                                       "count " + \
                   condition + " " + count
@@ -144,7 +144,7 @@ class MyHTMLParser(HTMLParser):
                 condition = ">"
                 count = "-inf"
             else:
-                condition = parts[4]
+                condition = parts[4].strip()
                 count = parts[5]
             if action == "No":
                 action = "DD"
@@ -153,6 +153,8 @@ class MyHTMLParser(HTMLParser):
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
                                                                                       "count " + \
                   condition + " " + count
+            count = count.strip()
+            condition = condition.strip()
             if action == "DD" and count != "inf":
                 self.strat.hardDouble(dealer_hand, int(hard_hand), condition + " " + count)
             return
@@ -173,9 +175,12 @@ class MyHTMLParser(HTMLParser):
                 action = "DD"
                 count = "inf"
                 condition = ">="
+            count = count.strip()
+            condition = condition.strip()
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
                                                                                       "count " + \
                   condition + " " + count
+
             if action == "DD" and count != "inf":
                 hard_value = int(hard_hand[1]) + 11
                 self.strat.softDouble(dealer_hand, int(hard_value), condition + " " + count)
@@ -194,6 +199,8 @@ class MyHTMLParser(HTMLParser):
             else:
                 condition = parts[4]
                 count = parts[5]
+            count = count.strip()
+            condition = condition.strip()
             print "Do " + action + " with " + hard_hand + " against " + dealer_hand + " with " \
                                                                                       "count " + \
                   condition + " " + count
@@ -222,6 +229,7 @@ def load_file(f, strat):
 togen = {
     "6d_hilow_s17_75pen_ra" : "basic_strategy_6d_s17",
     "1d_ao2_d10_s17_6rd_ra" : "basic_strategy_1d_s17",
+    "ao2_2d_ra_dany_s17" : "basic_strategy_2d_s17",
 }
 
 for name, basic in togen.items():
