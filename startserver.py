@@ -1,10 +1,14 @@
 import sys
-import http.server
-from http.server import SimpleHTTPRequestHandler
+try:
+    import http.server
+    from http.server import SimpleHTTPRequestHandler
+    HandlerClass = SimpleHTTPRequestHandler
+    ServerClass = http.server.HTTPServer
+except ImportError:
+    import SimpleHTTPServer, SocketServer
+    HandlerClass = SimpleHTTPServer.SimpleHTTPRequestHandler
+    ServerClass = SocketServer.TCPServer
 
-
-HandlerClass = SimpleHTTPRequestHandler
-ServerClass = http.server.HTTPServer
 Protocol = "HTTP/1.0"
 
 if sys.argv[1:]:
