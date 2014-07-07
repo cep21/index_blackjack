@@ -327,18 +327,6 @@ class MyHTMLParser(HTMLParser):
         raise Exception("Unknown text " + text)
 
 
-# def load_file(f, strat):
-# contents = urllib2.urlopen(f)
-#     html = contents.read()
-#     MyHTMLParser(strat).feed(html)
-
-
-# togen = {
-#     "6d_hilow_s17_75pen_ra" : "basic_strategy_6d_s17",
-#     "1d_ao2_d10_s17_6rd_ra" : "basic_strategy_1d_s17",
-#     "ao2_2d_ra_dany_s17" : "basic_strategy_2d_s17",
-# }
-
 dir_to_list = './indexgen'
 for name in os.listdir(dir_to_list):
     print("Parsing " + name)
