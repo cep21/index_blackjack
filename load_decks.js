@@ -25,6 +25,8 @@ var QueryString = function () {
 $.getJSON('json/' + QueryString.chart + ".json",function (data) {
     console.log(data);
     $("#strategy_name").text(data.strategy);
+    $("#counting_method").text(data.counting_method);
+    $("#extras").text(data.extra);
     $("#number_of_decks").text(data.decks);
     $("#double_after_split").text(data.DaS ? "Yes" : "No");
     $("#surrender_allowed").text(data.surrender_allowed);
