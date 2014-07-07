@@ -145,7 +145,13 @@ class MyHTMLParser(HTMLParser):
     def handle_endtag(self, tag):
         # print("Encountered an end tag :", tag)
         if tag == "p":
-            self.processText(self.current_text_tag.strip())
+            try:
+                no_exception = False
+                self.processText(self.current_text_tag.strip())
+                no_exception = True
+            finally:
+                if not no_exception:
+                    print ("Got exception for " + self.current_text_tag.strip())
         self.current_text_tag = ""
 
     def handle_data(self, data):
@@ -182,6 +188,14 @@ class MyHTMLParser(HTMLParser):
             assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
             action = parts[3].strip()
+            if len(parts) == 4:
+                if action == 'Stand':
+                    self.strat.hardHitCount(dealer_hand, int(hard_hand), 'S')
+                else:
+                    assert action == 'Hit'
+                    self.strat.hardHitCount(dealer_hand, int(hard_hand), 'H')
+                return
+
             condition = parts[4]
             count = parts[5]
             print("Do " + action + " with " + hard_hand + " against " + dealer_hand + " with "
@@ -208,7 +222,10 @@ class MyHTMLParser(HTMLParser):
                   condition + " " + count)
             if action == "Hit":
                 hard_value = int(hard_hand[1]) + 11
-                self.strat.softHitCount(dealer_hand, int(hard_value), condition + " " + count)
+                action = condition + ' ' + count
+                if count == '-inf':
+                    action = 'H'
+                self.strat.softHitCount(dealer_hand, int(hard_value), action)
             return
         if text.startswith("Hard Double Down - "):
             text = text[len("Hard Double Down - "):]
@@ -217,7 +234,10 @@ class MyHTMLParser(HTMLParser):
             assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
             action = parts[3]
-            if (len(parts) == 4):
+            if len(parts) == 5 and parts[3] == 'Double' and parts[4] == 'Down':
+                condition = ">"
+                count = "-inf"
+            elif (len(parts) == 4):
                 condition = ">"
                 count = "-inf"
             else:
@@ -242,7 +262,7 @@ class MyHTMLParser(HTMLParser):
             assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
             action = parts[3]
-            if (len(parts) == 4):
+            if (len(parts) == 4) or (len(parts) == 5 and parts[3] == 'Double' and parts[4] == 'Down'):
                 condition = "<"
                 count = "inf"
             else:
@@ -266,9 +286,16 @@ class MyHTMLParser(HTMLParser):
             text = text[len("Splitting Pairs - "):]
             parts = text.split(" ")
             hard_hand = parts[0]
+            hard_value = hard_hand[0]
             assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
             action = parts[3]
+            if len(parts) == 4:
+                if action == 'Split':
+                    self.strat.splitIndex(dealer_hand, hard_value, 'P')
+                else:
+                    assert False, "Wha?"
+                return
             if (len(parts) == 5):
                 condition = ">"
                 count = "inf"
@@ -282,12 +309,11 @@ class MyHTMLParser(HTMLParser):
                                                                                       "count " +
                   condition + " " + count)
             if count != "inf":
-                hard_value = hard_hand[0]
                 self.strat.splitIndex(dealer_hand, hard_value, condition + " " + count)
             return
-        if text.startswith("Insurance -  vs. "):
-            s = text.index("Insurance -  vs. ")
-            text = text[s + len("Insurance -  vs. "):]
+        if text.startswith("Insurance - vs. "):
+            s = text.index("Insurance - vs. ")
+            text = text[s + len("Insurance - vs. "):]
             text = text[text.index(" >= ") + len(" >= "):]
             count_to_insure = int(text)
             print("Insure >= " + str(count_to_insure))
@@ -322,5 +348,5 @@ for name in os.listdir(dir_to_list):
         MyHTMLParser(strat).feed(html)
 
     contents = json.dumps(strat.__dict__, sort_keys=True)
-    with open("./json/%s.json" % name, 'w') as f:
+    with open("./json/%s.json" % name[0:name.index('.')], 'w') as f:
         json.dump(strat.__dict__, f)

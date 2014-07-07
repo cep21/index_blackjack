@@ -22,9 +22,7 @@ var QueryString = function () {
 } ();
 
 
-//1d_ao2_d10_s17_6rd_ra.json
-//$.getJSON("./basic_strategy_6d_s17.json",function (data) {
-$.getJSON(QueryString.chart + ".json",function (data) {
+$.getJSON('json/' + QueryString.chart + ".json",function (data) {
     console.log(data);
     $("#strategy_name").text(data.strategy);
     $("#number_of_decks").text(data.decks);
