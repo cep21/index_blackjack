@@ -71,14 +71,14 @@ class Strategy:
 
         method_str = '_method'
         if method_str in name:
-            method = name[name.indexof(method_str) + len(method_str):]
-            method = method[0:method.indexof('_')]
+            method = name[name.index(method_str) + len(method_str):]
+            method = method[0:method.index('_')]
             name = name.replace(method_str + method, '_')
 
         double_str = '_double'
         if double_str in name:
-            doubles = name[name.indexof(double_str) + len(double_str):]
-            doubles = doubles[0:doubles.indexof('_')]
+            doubles = name[name.index(double_str) + len(double_str):]
+            doubles = doubles[0:doubles.index('_')]
             name = name.replace(double_str + doubles, '_')
 
         extras = name
@@ -164,7 +164,10 @@ class MyHTMLParser(HTMLParser):
 
     def handle_entityref(self, name):
         # print("Encountered some entity  :", name)
-        self.current_text_tag += str(self.unescape("&" + name + ";").encode('ascii', 'ignore'))
+        # s = str(self.unescape("&" + name + ";").encode('ascii', 'strict'))
+        s = self.unescape("&" + name + ";")
+        assert len(s) != 0
+        self.current_text_tag += s
 
     def processText(self, text):
         text = text.strip()
@@ -311,6 +314,7 @@ class MyHTMLParser(HTMLParser):
             if count != "inf":
                 self.strat.splitIndex(dealer_hand, hard_value, condition + " " + count)
             return
+        text = text.replace('Insurance -  vs', 'Insurance - vs')
         if text.startswith("Insurance - vs. "):
             s = text.index("Insurance - vs. ")
             text = text[s + len("Insurance - vs. "):]
