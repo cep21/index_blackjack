@@ -345,6 +345,5 @@ for name in os.listdir(dir_to_list):
         print("Looking at " + name)
         MyHTMLParser(strat).feed(html)
 
-    contents = json.dumps(strat.__dict__, sort_keys=True)
     with open("./json/%s.json" % name[0:name.index('.')], 'w') as f:
         json.dump(strat.__dict__, f, sort_keys=True)
