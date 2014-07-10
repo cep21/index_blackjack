@@ -26,7 +26,7 @@ class Strategy:
         name = filename[0:filename.rindex('.')]
         name = "_" + name + "_"
         name = name.lower()
-        decks, h17, das, sur, rsa, spn, extras, doubles, method = 6, True, True, 'None', True, 4, '', 'any', ''
+        decks, h17, das, sur, rsa, spn, extras, doubles, counting_method = 6, True, True, 'None', True, 4, '', 'any', ''
         deck_str = {
             1: "_1d_",
             2: "_2d_",
@@ -71,9 +71,9 @@ class Strategy:
 
         method_str = '_method'
         if method_str in name:
-            method = name[name.index(method_str) + len(method_str):]
-            method = method[0:method.index('_')]
-            name = name.replace(method_str + method, '_')
+            counting_method = name[name.index(method_str) + len(method_str):]
+            counting_method = counting_method[0:counting_method.index('_')]
+            name = name.replace(method_str + counting_method, '_')
 
         double_str = '_double'
         if double_str in name:
@@ -93,7 +93,7 @@ class Strategy:
         self.hard_double = s.hard_double
         self.soft_double = s.soft_double
         self.insurance = s.insurance
-        self.decks, self.hit_soft_17, self.DaS, self.surrender_allowed, self.rsa, self.spn, self.extra, self.doubles, self.method = decks, h17, das, sur, rsa, spn, extras, doubles, method
+        self.decks, self.hit_soft_17, self.DaS, self.surrender_allowed, self.rsa, self.spn, self.extra, self.doubles, self.counting_method = decks, h17, das, sur, rsa, spn, extras, doubles, counting_method
 
 
     def hardHitCount(self, dealer, you, count):
