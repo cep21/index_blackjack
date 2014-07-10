@@ -328,6 +328,12 @@ class MyHTMLParser(HTMLParser):
 
 
 dir_to_list = './indexgen'
+directory_to_make = './json'
+try:
+    os.stat(directory_to_make)
+except:
+    os.mkdir(directory_to_make)
+
 for name in os.listdir(dir_to_list):
     print("Parsing " + name)
     strat = Strategy(name)
