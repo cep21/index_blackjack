@@ -1,3 +1,4 @@
+import os
 import sys
 try:
     import http.server
@@ -21,6 +22,9 @@ HandlerClass.protocol_version = Protocol
 httpd = ServerClass(server_address, HandlerClass)
 
 print "Visit http://%s:%d" % ('127.0.0.1', port)
+dir_to_list = './json'
+for name in os.listdir(dir_to_list):
+    print "http://%s:%d/index.html?chart=%s" % ('127.0.0.1', port, os.path.splitext(name)[0])
 sa = httpd.socket.getsockname()
 # print "Serving HTTP on", sa[0], "port", sa[1], "..."
 httpd.serve_forever()
