@@ -174,7 +174,7 @@ class MyHTMLParser(HTMLParser):
         if text == '':
             return
         if text in ["", "Index", "Stand", "Hit", "Diff", "Double Down", "No Double Down", "Split",
-                    "No Split", "Insure", "Don't Insure", '', b'', "b''"]:
+                    "No Split", "Insure", "Don't Insure", '', b'', "b''", 'Surrender', 'Play']:
             return
         try:
             float(text)
@@ -324,7 +324,31 @@ class MyHTMLParser(HTMLParser):
             self.strat.insureIndex(count_to_insure)
             return
 
-        raise Exception("Unknown text " + text)
+        if text.startswith("Surrender Table - "):
+            text = text[len("Surrender Table - "):]
+            parts = text.split(" ")
+            action = 'Surrender'
+            hand = parts[0]
+            assert (parts[1] == 'vs.')
+            dealer_hand = parts[2]
+            if parts[3] == 'Play':
+                #Do play stuff
+                condition = ">="
+                count = "-inf"
+                pass
+            else:
+                assert(len(parts) == 6)
+                assert (parts[3] == 'Surrender')
+                condition = parts[4]
+                count = parts[5]
+                #Surrender?
+            print("Do " + action + " with " + hand + " against " + dealer_hand + " with "
+                                                                                      "count " +
+                  condition + " " + count)
+            return
+
+
+        raise Exception("for %s, Unknown text: %s " %(self.strat.counting_method, text))
 
 
 dir_to_list = './indexgen'
@@ -334,6 +358,7 @@ try:
 except:
     os.mkdir(directory_to_make)
 
+load_json = ""
 for name in os.listdir(dir_to_list):
     print("Parsing " + name)
     strat = Strategy(name)
@@ -345,5 +370,10 @@ for name in os.listdir(dir_to_list):
         print("Looking at " + name)
         MyHTMLParser(strat).feed(html)
 
-    with open("./json/%s.json" % name[0:name.index('.')], 'w') as f:
+    base_name = name[0:name.index('.')]
+    load_json += "add_chart_row('%s');\n" % base_name
+    with open("./json/%s.json" % base_name, 'w') as f:
         json.dump(strat.__dict__, f, sort_keys=True)
+
+with open("./show_each_deck.js", 'w') as f:
+    f.write(load_json)

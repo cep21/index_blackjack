@@ -3,56 +3,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="load_decks.js"></script>
+    <script type="text/javascript" src="show_decks.js"></script>
+    <script type="text/javascript" src="show_each_deck.js"></script>
     <link rel="stylesheet" type="text/css" href="mystyle.css">
-    <title>Blackjack index plays</title>
+    <title>Charts of blackjack index plays</title>
 </head>
 <body>
-<table border="1">
+<table id="chart_link_table" border="1">
     <tr>
         <td>Strategy Name</td>
-        <td id="strategy_name">0</td>
-    </tr>
-    <tr>
         <td>Number of decks</td>
-        <td id="number_of_decks">0</td>
-    </tr>
-    <tr>
         <td>Double after Split</td>
-        <td id="double_after_split">0</td>
-    </tr>
-    <tr>
         <td>Hit soft 17</td>
-        <td id="hit_soft_17">0</td>
-    </tr>
-    <tr>
         <td>Surrender</td>
-        <td id="surrender_allowed">0</td>
-    </tr>
-    <tr>
         <td>Counting Method</td>
-        <td id="counting_method">0</td>
-    </tr>
-    <tr>
         <td>Extras</td>
-        <td id="extras">0</td>
+        <td>Link</td>
     </tr>
 </table>
-<p id="hard_table_header">Hard hit/stand</p>
-<table id="hard_table" border="1">
-</table>
-<p id="soft_table_header">Soft hit/stand</p>
-<table id="soft_table" border="1">
-</table>
-<p id="hard_double_table_header">Hard double/hit</p>
-<table id="hard_double_table" border="1">
-</table>
-<p id="soft_double_table_header">Soft double/hit</p>
-<table id="soft_double_table" border="1">
-</table>
-<p id="split_table_header">Splits</p>
-<table id="split_table" border="1">
-</table>
-<div id="insurance">Insure at <span id="insurance_index"></span></div>
 </body>
 </html>

@@ -1,0 +1,10 @@
+add_chart_row('1d_d10_h17_methodao2_nodas');
+add_chart_row('1d_h17_nodas_dany_methodao2');
+add_chart_row('1d_s17_nodas_d10_methodao2');
+add_chart_row('2d_h17_66pen_DAS_methodao2');
+add_chart_row('2d_h17_das_methodao2');
+add_chart_row('2d_h17_rsa_methodhilow_ra');
+add_chart_row('2d_s17_66pen_nodas_methodao2');
+add_chart_row('6d_h17_nosur_methodhilow');
+add_chart_row('6d_h17_surlate_methodhilow');
+add_chart_row('6d_ra_s17_RSA_1cut_methodhilow');
