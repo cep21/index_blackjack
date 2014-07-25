@@ -33,3 +33,11 @@
 .no_split_data {
     background-color: teal;
 }
+
+.surrender_data {
+    background-color: white;
+}
+
+.no_surrender_data {
+    background-color: gray;
+}

@@ -166,6 +166,65 @@ $.getJSON('json/' + QueryString.chart + ".json",function (data) {
             soft_table.append(head);
         }
     }
+    if (data.surrender_allowed == "None") {
+        $("#surrender_hard_table").remove();
+        $("#surrender_hard_table_header").remove();
+        $("#surrender_split_table").remove();
+        $("#surrender_split_table_header").remove();
+        return;
+    }
+    {
+        var table = $("#surrender_hard_table")
+        table.empty();
+        table.addClass("basic_table")
+        head = $('<tr><td class="head_data"></td></tr>');
+        for (i = 7; i < 12; i++) {
+            head.append('<td class="head_data">' + card_tables[i] + "</td>");
+        }
+        table.append(head);
+
+        for (i = 12; i <= 17; i++) {
+            head = $("<tr><td>" + i + "</td></tr>");
+            for (j = 7; j < 12; j++) {
+                var td = $("<td>" + data.surrender_hard[i - 12][j - 7] + "</td>")
+                if (data.surrender_hard[i - 12][j - 7] == "R") {
+                    td.addClass('surrender_data');
+                }else if (data.surrender_hard[i - 12][j - 7] == "_"){
+                    td.addClass('no_surrender_data');
+                } else {
+                    td.addClass('index_data');
+                }
+                head.append(td);
+            }
+            table.append(head);
+        }
+    }
+    {
+        var table = $("#surrender_split_table")
+        table.empty();
+        table.addClass("basic_table")
+        head = $('<tr><td class="head_data"></td></tr>');
+        for (i = 7; i < 12; i++) {
+            head.append('<td class="head_data">' + card_tables[i] + "</td>");
+        }
+        table.append(head);
+
+        for (i = 7; i <= 8; i++) {
+            head = $("<tr><td>" + i + "</td></tr>");
+            for (j = 7; j < 12; j++) {
+                var td = $("<td>" + data.surrender_split[i - 7][j - 7] + "</td>")
+                if (data.surrender_split[i - 7][j - 7] == "R") {
+                    td.addClass('surrender_data');
+                }else if (data.surrender_split[i - 7][j - 7] == "_"){
+                    td.addClass('no_surrender_data');
+                } else {
+                    td.addClass('index_data');
+                }
+                head.append(td);
+            }
+            table.append(head);
+        }
+    }
 }).fail(function () {
         console.log("not valid json???");
     });

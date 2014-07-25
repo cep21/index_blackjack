@@ -59,9 +59,8 @@ class Strategy:
                 break
 
         sur_str = {
-            True: "_esur_",
-            True: "_lsur_",
-            False: "_s17_"
+            'late': "_surlate_",
+            'early': "_surearly_",
         }
         for k, v in sur_str.items():
             if v in name:
@@ -83,8 +82,9 @@ class Strategy:
 
         extras = name
 
-        basic_filename = "basic_strategy_%(decks)dd_%(h17)s_%(das)s" % {'decks': decks, 'h17': 'h17' if h17 else 's17',
-                                                                        'das': 'das' if das else 'nodas'}
+        basic_filename = "basic_strategy_%(decks)dd_%(h17)s_%(das)s%(sur)s" % {'decks': decks, 'h17': 'h17' if h17 else 's17',
+                                                                        'das': 'das' if das else 'nodas',
+                                                                        'sur': "_sur" + sur if sur != 'None' else ''}
         s = basic_strategy(basic_filename)
         self.hard = s.hard
         self.hard = s.hard
@@ -93,6 +93,9 @@ class Strategy:
         self.hard_double = s.hard_double
         self.soft_double = s.soft_double
         self.insurance = s.insurance
+        if sur != 'None':
+            self.surrender_split = s.surrender_split
+            self.surrender_hard = s.surrender_hard
         self.decks, self.hit_soft_17, self.DaS, self.surrender_allowed, self.rsa, self.spn, self.extra, self.doubles, self.counting_method = decks, h17, das, sur, rsa, spn, extras, doubles, counting_method
 
 
@@ -126,6 +129,19 @@ class Strategy:
         you_index = card_index[you]
         assert you_index >= 0 and you_index <= 11, "You are " + str(you_index)
         self.split[you_index][dealer_index] = str(count)
+
+    def surrenderSplitIndex(self, dealer, you, count):
+        assert dealer in card_index
+        dealer_index = card_index[dealer]
+        you_index = card_index[str(you)]
+        assert you_index >= 5 and you_index <= 6, "You are " + str(you_index)
+        self.surrender_split[you_index - 5][dealer_index - 5] = str(count)
+
+    def surrenderHardIndex(self, dealer, you, count):
+        assert dealer in card_index, "Unable to find " + dealer + " in " + str(card_index) + " of type " + str(type(dealer))
+        dealer_index = card_index[dealer]
+        assert you >= 12 and you <= 17
+        self.surrender_hard[you - 12][dealer_index - 5] = str(count)
 
     def insureIndex(self, count):
         self.insurance = count
@@ -330,7 +346,7 @@ class MyHTMLParser(HTMLParser):
             action = 'Surrender'
             hand = parts[0]
             assert (parts[1] == 'vs.')
-            dealer_hand = parts[2]
+            dealer_hand = parts[2].replace(":", "")
             if parts[3] == 'Play':
                 #Do play stuff
                 condition = ">="
@@ -342,9 +358,14 @@ class MyHTMLParser(HTMLParser):
                 condition = parts[4]
                 count = parts[5]
                 #Surrender?
-            print("Do " + action + " with " + hand + " against " + dealer_hand + " with "
-                                                                                      "count " +
-                  condition + " " + count)
+            print("Do " + action + " with " + hand + " against " + dealer_hand + " with " + "count " + condition + " " + count)
+            if count != "-inf":
+                if ',' in hand:
+                    card = int(hand[0])
+                    self.strat.surrenderSplitIndex(dealer_hand, card, condition + " " + count)
+                else:
+                    hand = int(hand)
+                    self.strat.surrenderHardIndex(dealer_hand, hand, condition + " " + count)
             return
 
 
