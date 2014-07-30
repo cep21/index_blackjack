@@ -252,6 +252,7 @@ class MyHTMLParser(HTMLParser):
             hard_hand = parts[0]
             assert (parts[1] == "vs.")
             dealer_hand = parts[2].strip(":")
+            parts = [p.strip() for p in parts]
             action = parts[3]
             if len(parts) == 5 and parts[3] == 'Double' and parts[4] == 'Down':
                 condition = ">"

@@ -8,3 +8,4 @@ add_chart_row('2d_s17_66pen_nodas_methodao2');
 add_chart_row('6d_h17_nosur_methodhilow');
 add_chart_row('6d_h17_surlate_methodhilow');
 add_chart_row('6d_ra_s17_RSA_1cut_methodhilow');
+add_chart_row('6d_ra_s17_RSA_1cut_methodzen_nosur');
