@@ -8,6 +8,7 @@ import collections
 import os
 # import urllib2
 import json
+import shutil
 
 card_index = {'A': 9, 'X': 8}
 for i in range(2, 11):
@@ -375,10 +376,8 @@ class MyHTMLParser(HTMLParser):
 
 dir_to_list = './indexgen'
 directory_to_make = './json'
-try:
-    os.stat(directory_to_make)
-except:
-    os.mkdir(directory_to_make)
+shutil.rmtree(directory_to_make)
+os.mkdir(directory_to_make)
 
 load_json = ""
 for name in os.listdir(dir_to_list):

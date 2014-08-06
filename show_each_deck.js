@@ -1,6 +1,8 @@
 add_chart_row('1d_d10_h17_methodao2_nodas');
 add_chart_row('1d_das_h17_rsa_hitaces_surlate_dany_65');
+add_chart_row('1d_h17_nodas_d10_methodao2v2');
 add_chart_row('1d_h17_nodas_dany_methodao2');
+add_chart_row('1d_s17_d10_nodas_methodao2');
 add_chart_row('1d_s17_nodas_d10_methodao2');
 add_chart_row('2d_h17_66pen_DAS_methodao2');
 add_chart_row('2d_h17_das_methodao2');
